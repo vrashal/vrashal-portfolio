@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Platform | Vrashal Taribagil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff; --bg-alt: #f4f4f0;
+            --text: #0a0a0a; --muted: #555555;
+            --accent: #ff6b00; --lime: #c8f135;
+            --ease: cubic-bezier(0.16,1,0.3,1);
+            --ease-back: cubic-bezier(0.34,1.56,0.64,1);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height:1.7; cursor: none; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Cursor */
+        #cursor-dot { width:8px; height:8px; background:var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition: width .3s var(--ease-back), height .3s var(--ease-back); }
+        #cursor-ring { width:36px; height:36px; border:2px solid var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); opacity:.6; transition: width .4s var(--ease-back), height .4s var(--ease-back); }
+
+        /* Nav */
+        nav { display:flex; justify-content:space-between; align-items:center; padding:1.2rem 5%; position:fixed; width:100%; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:1000; border-bottom:2px solid #0a0a0a; }
+        .logo { font-weight:900; font-size:1.3rem; text-transform:uppercase; letter-spacing:1px; }
+        .logo span { color:var(--accent); }
+        .back-btn { display:inline-flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.82rem; text-transform:uppercase; letter-spacing:1.5px; border-bottom:2px solid transparent; padding-bottom:2px; transition:border-color .3s, color .3s; }
+        .back-btn:hover { color:var(--accent); border-color:var(--accent); }
+
+        /* Hero Band */
+        .hero-band {
+            margin-top:76px; padding:80px 5% 60px;
+            background:var(--text); color:#fff; position:relative; overflow:hidden;
+        }
+        .hero-band::after { content:'01'; position:absolute; right:5%; bottom:-20px; font-family:'Barlow Condensed',sans-serif; font-size:20rem; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; pointer-events:none; }
+        .hero-band .eyebrow { display:inline-block; background:var(--accent); color:#fff; font-size:0.75rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; padding:0.3rem 0.9rem; border-radius:2px; margin-bottom:1.5rem; }
+        .hero-band h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(3rem,8vw,6.5rem); font-weight:900; text-transform:uppercase; letter-spacing:-2px; line-height:0.95; margin-bottom:1.5rem; }
+        .hero-band h1 em { font-style:normal; color:var(--lime); }
+        .hero-band .tagline { font-size:1.1rem; color:rgba(255,255,255,0.55); max-width:550px; }
+
+        /* Meta strip */
+        .meta-strip { display:flex; flex-wrap:wrap; gap:0; border-bottom:2px solid #0a0a0a; }
+        .meta-item { flex:1; min-width:160px; border-right:2px solid #0a0a0a; padding:1.5rem 2rem; background:var(--bg-alt); }
+        .meta-item:last-child { border-right:none; }
+        .meta-item .label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:0.4rem; }
+        .meta-item .value { font-weight:800; font-size:1rem; }
+
+        /* Sections */
+        .content-section { padding:80px 5%; max-width:1100px; margin:0 auto; }
+        .content-section + .content-section { border-top:1px solid #e5e5e5; }
+        .section-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:var(--accent); margin-bottom:1rem; }
+        .section-heading { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:900; text-transform:uppercase; line-height:1; margin-bottom:2rem; }
+        .section-heading span { color:var(--accent); }
+        p.body-text { color:var(--muted); font-size:1rem; margin-bottom:1.2rem; max-width:680px; }
+
+        /* Feature grid */
+        .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; margin-top:2rem; }
+        .feature-card { border:2px solid #0a0a0a; padding:1.8rem; position:relative; transition:transform .3s var(--ease); background:#fff; }
+        .feature-card::before { content:''; position:absolute; top:5px; left:5px; right:-5px; bottom:-5px; background:var(--lime); z-index:-1; transition:background .3s; }
+        .feature-card:hover { transform:translate(-2px,-2px); }
+        .feature-card:hover::before { background:var(--accent); }
+        .feature-icon { font-size:2rem; margin-bottom:1rem; }
+        .feature-card h3 { font-weight:800; margin-bottom:0.5rem; }
+        .feature-card p { color:var(--muted); font-size:0.9rem; }
+
+        /* Tech pills */
+        .tech-row { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1.5rem; }
+        .tech-pill { background:var(--lime); color:var(--text); padding:0.35rem 1rem; font-size:0.8rem; font-weight:700; font-family:monospace; text-transform:uppercase; letter-spacing:1px; border-radius:2px; border:1.5px solid #0a0a0a; transition:background .3s, transform .2s var(--ease-back); }
+        .tech-pill:hover { background:var(--accent); color:#fff; transform:translateY(-3px); }
+
+        /* Screenshot placeholder */
+        .screenshot-area { background:var(--bg-alt); border:2px solid #0a0a0a; border-radius:0; padding:60px 40px; text-align:center; margin:2rem 0; position:relative; overflow:hidden; }
+        .screenshot-area::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(200,241,53,0.07) 10px, rgba(200,241,53,0.07) 20px); }
+        .screenshot-area .placeholder-text { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2rem,5vw,4rem); font-weight:900; text-transform:uppercase; opacity:0.15; }
+
+        /* Challenge/Solution */
+        .two-col { display:grid; grid-template-columns:1fr 1fr; gap:3rem; }
+        @media(max-width:700px){ .two-col{ grid-template-columns:1fr; } }
+        .block-card { border-left:4px solid var(--accent); padding:1.5rem; background:var(--bg-alt); }
+        .block-card h3 { font-weight:800; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-bottom:0.8rem; color:var(--accent); }
+        .block-card p { color:var(--muted); font-size:0.95rem; }
+
+        /* CTA footer */
+        .page-footer { background:var(--text); color:#fff; text-align:center; padding:60px 5%; border-top:2px solid #0a0a0a; }
+        .page-footer p { color:rgba(255,255,255,0.5); margin-bottom:2rem; }
+        .cta-btn { display:inline-block; padding:1rem 2.5rem; background:var(--accent); color:#fff; font-weight:700; font-size:0.9rem; text-transform:uppercase; letter-spacing:1.5px; border:2px solid var(--accent); transition:background .3s, transform .3s var(--ease-back); }
+        .cta-btn:hover { background:transparent; color:var(--accent); transform:translateY(-3px); }
+
+        /* Reveal */
+        .reveal { opacity:0; transform:translateY(40px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+
+        @media(max-width:768px){ body{ cursor:auto; } #cursor-dot,#cursor-ring{ display:none; } }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <nav>
+        <a href="vrashalPortfolio.html" class="logo">Vrashal<span>.</span>dev</a>
+        <a href="vrashalPortfolio.html#projects" class="back-btn">&larr; Back to Portfolio</a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-band">
+        <span class="eyebrow">Case Study</span>
+        <h1>E-Commerce <em>Platform</em></h1>
+        <p class="tagline">A scalable, full-featured online shopping experience built on Salesforce Commerce Cloud.</p>
+    </div>
+
+    <!-- META STRIP -->
+    <div class="meta-strip">
+        <div class="meta-item"><div class="label">Role</div><div class="value">Full-Stack Developer</div></div>
+        <div class="meta-item"><div class="label">Year</div><div class="value">2024 – 2025</div></div>
+        <div class="meta-item"><div class="label">Platform</div><div class="value">SFCC / B2C Commerce</div></div>
+        <div class="meta-item"><div class="label">Status</div><div class="value" style="color:var(--accent);">&#9679; Live</div></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="content-section reveal">
+        <div class="section-label">01 — Overview</div>
+        <h2 class="section-heading">What We <span>Built</span></h2>
+        <p class="body-text">A high-performance, mobile-first e-commerce storefront built on Salesforce Commerce Cloud (SFCC). The platform handles thousands of daily transactions, featuring real-time inventory management, a personalised product recommendation engine, and a frictionless multi-step checkout.</p>
+        <p class="body-text">The storefront was architected using SFCC's SFRA (Storefront Reference Architecture) and extended with custom cartridges, RESTful service integrations, and jQuery-driven UI components.</p>
+
+        <div class="screenshot-area">
+            <div class="placeholder-text">Storefront Preview</div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="content-section reveal">
+        <div class="section-label">02 — Key Features</div>
+        <h2 class="section-heading">What It <span>Does</span></h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Smart Cart</h3>
+                <p>Persistent cart with real-time price updates, promo code validation, and upsell suggestions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Auth & Accounts</h3>
+                <p>Full account management — registration, login, order history, address book, and wishlists.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Checkout Flow</h3>
+                <p>Multi-step, single-page checkout with address autocomplete, saved payment, and order confirmation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Order Management</h3>
+                <p>Real-time order tracking, returns portal, and email notification triggers integrated via SFCC hooks.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Search & Filters</h3>
+                <p>SFCC Einstein-powered search with dynamic faceted filtering, sorting, and infinite scroll.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile-First</h3>
+                <p>Fully responsive layouts, touch-optimised carousels, and PWA-ready service worker caching.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="content-section reveal">
+        <div class="section-label">03 — Tech Stack</div>
+        <h2 class="section-heading">Built <span>With</span></h2>
+        <p class="body-text">The project leveraged a modern commerce tech stack for reliability, performance, and maintainability.</p>
+        <div class="tech-row">
+            <span class="tech-pill">SFCC SFRA</span>
+            <span class="tech-pill">Node.js</span>
+            <span class="tech-pill">jQuery</span>
+            <span class="tech-pill">ISML Templates</span>
+            <span class="tech-pill">Sass / CSS3</span>
+            <span class="tech-pill">REST APIs</span>
+            <span class="tech-pill">Einstein Search</span>
+            <span class="tech-pill">Git</span>
+            <span class="tech-pill">OCAPI</span>
+            <span class="tech-pill">Postman</span>
+        </div>
+    </div>
+
+    <!-- CHALLENGE / SOLUTION -->
+    <div class="content-section reveal">
+        <div class="section-label">04 — Process</div>
+        <h2 class="section-heading">Challenge & <span>Solution</span></h2>
+        <div class="two-col">
+            <div class="block-card">
+                <h3>The Challenge</h3>
+                <p>Migrating an existing legacy storefront to SFCC without downtime, while maintaining SEO rankings, existing customer accounts, and third-party service integrations.</p>
+            </div>
+            <div class="block-card" style="border-left-color:#0a0a0a;">
+                <h3>The Solution</h3>
+                <p>Phased rollout using SFCC's A/B testing capabilities. Custom data migration scripts handled account transfer. SEO was preserved through 301 redirect maps and structured data markup.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE FOOTER -->
+    <div class="page-footer">
+        <p>Interested in working together or learning more about this project?</p>
+        <a href="mailto:vrashaltaribagil@gmail.com" class="cta-btn">Get In Touch</a>
+    </div>
+
+    <script>
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        let mx=0,my=0,rx=0,ry=0;
+        document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+        (function animC(){ dot.style.left=mx+'px'; dot.style.top=my+'px'; rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animC); })();
+
+        const obs = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold:0.12 });
+        document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    </script>
+</body>
+</html>
