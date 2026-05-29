@@ -115,7 +115,7 @@ function updateWeatherUI(data, lat, lon) {
   // Add timeout to prevent hanging requests
   Promise.race([
     fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+      `https://geocode.xyz/${lat},${lon}?json=1`,
     ).then((r) => {
       if (!r.ok) throw new Error("Geocoding failed");
       return r.json();
@@ -126,8 +126,8 @@ function updateWeatherUI(data, lat, lon) {
   ])
     .then((loc) => {
       const locationText =
-        loc.address?.city && loc.address?.country_code
-          ? `${loc.address.city}, ${loc.address.country_code.toUpperCase()}`
+        loc.city && loc.country
+          ? `${loc.city}, ${loc.country}`
           : `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
       const h3 = weatherMockup.querySelector(".weather-info h3");
       if (h3) h3.textContent = locationText;
