@@ -77,7 +77,7 @@ async function getWeatherData(lat, lon) {
     }
 
     const data = await response.json();
-
+    console.debug("Weather API response:", data);
     // Validate API response structure
     if (!data.current_weather) {
       throw new Error("Invalid API response structure");
